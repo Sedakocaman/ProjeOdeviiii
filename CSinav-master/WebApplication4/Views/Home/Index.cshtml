@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+} 
+<link rel="stylesheet" href="~/Content/Site.css" />
+<div class="container">
+
+    <br />
+    <form id="form1">
+        <h1>Kişisel Bilgiler</h1>
+        <label>İsim</label><br />
+        <input type="text" id="isim" name="isim" />
+        <br />
+        <label>Soyisim</label><br />
+        <input type="text" id="soyisim" name="soyisim" />
+        <br />
+        <label>Adres</label>
+        <br />
+        <textarea id="adres" name="adres" rows="5" cols="7"></textarea>
+        <br />
+        <label>E-mail</label><br>
+        <input type="text" id="email" name="email" />
+        <br />
+        <input type="button" class="dugme" id="btn" value="Kaydet" />
+
+    </form>
+
+    <table id="tablo1" class="display">
+        <thead>
+            <tr>
+                <th>İsim</th>
+                <th>Soyisim</th>
+                <th>Adres</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody id="tbody1">
+        </tbody>
+    </table>
+    <input type="button" class="dugme" id="btn1" value="Listeyi İndir" />
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#tablo1").DataTable();
+        $("#btn").click(function () {
+
+
+            $('#tablo1 tr:last').after('<tr><td>' + $("#isim").val() + '</td><td>' + $("#soyisim").val() + '</td><td>' + $("#adres").val() + '</td><td>' + $("#email").val() + '</td></tr>');
+
+            var datastring = $("#form1").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Create",
+                data: datastring,
+                dataType: "json",
+                success: function (data) {
+                    var response = JSON.parse(JSON.stringify(data));
+           
+                },
+                error: function () {
+                    alert('error handling here');
+                }
+            });
+        });
+        $("#btn1").click(function () {
+            var datastring = $("#form1").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Excel",
+                data: datastring,
+                dataType: "json",
+                success: function (data) {
+                    var response = JSON.parse(JSON.stringify(data));
+                      window.location = '/Home/Download?fileGuid=' + response.FileGuid
+                           + '&filename=' + response.FileName;
+                },
+                error: function () {
+                    alert('error handling here');
+                }
+            });
+        });
+    });
+
+</script>

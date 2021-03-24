@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+<form id="form1">
+    <input type="text" name="userName" placeholder="Kullanıcı Adı" />
+    <input type="password" name="password" placeholder="Şifre" />
+    <input type="button" id="btn" value="Login"/>
+    <span id="error"></span>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#btn").click(function () {
+
+
+            var datastring = $("#form1").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/Home/LoginUser",
+                data: datastring,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        window.location = '/Home/';
+                    }
+                    else {
+                        $("#error").html("Yanlış kullanıcı adı veya şıfre");
+                    }
+
+
+
+                },
+                error: function () {
+                    alert('error handling here');
+                }
+            });
+        });
+    });</script>
